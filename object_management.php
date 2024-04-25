@@ -23,7 +23,10 @@ function closeDatabaseConnection($conn) {
     $conn->close();
 }
 
-function getObjectById($objectId) {
+function getObjectById($idObject) {
+    if (!is_numeric($idObject)) {
+        die("Error executing query: This is not a number ");
+    }
     $conn = connectToDatabase();
 
     // Query to select object and its related loans
@@ -31,7 +34,7 @@ function getObjectById($objectId) {
             FROM object AS o 
             LEFT JOIN loan AS l 
             ON o.id_object = l.id_object 
-            WHERE o.id_object = $objectId";
+            WHERE o.id_object = $idObject";
     $result = $conn->query($sql);
 
     // Check if the query was successful
@@ -73,30 +76,43 @@ function getObjectById($objectId) {
 // Function to add a new loan to the database
 function addNewLoan($idObject, $employeeName, $estimatedLoanDays, $notes) {
     $conn = connectToDatabase();
-
+    
     // Get the current date
     $loanDate = date('Y-m-d');
-
-    // Insert the new loan into the database
-    $sql = "INSERT INTO loan (id_object, employee_name, loan_date, estimated_loan_days, notes) VALUES ('$idObject', '$employeeName', '$loanDate', '$estimatedLoanDays', '$notes')";
-	
-    $result = $conn->query($sql);
+    
+    // Prepare the SQL statement
+    $sql = "INSERT INTO loan (id_object, employee_name, loan_date, estimated_loan_days, notes) VALUES (?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    
+    // Bind parameters
+    $stmt->bind_param("issss", $idObject, $employeeName, $loanDate, $estimatedLoanDays, $notes);
+    
+    // Execute the statement
+    $stmt->execute();
     
     // Check if the query was successful
-    if ($result === false) {
-        die("Error executing query: " . $conn->error);
+    if ($stmt->affected_rows === -1) {
+        die("Error executing query: " . $stmt->error);
     }
     
-    // Close the database connection
+    // Close the statement and the database connection
+    $stmt->close();
     closeDatabaseConnection($conn);
     
-    // Return the object data
-    return $result;
+    // Return true if successful
+    return true;
 }
+
 
 
 // Function to update the object status to "ONLOAN"
 function updateObjectStatusToOnLoan($idObject) {
+
+    
+    if (!is_numeric($idObject)) {
+        die("Error executing query: This is not a number ");
+    }
+
     $conn = connectToDatabase();
 
     // Update the object status to "ONLOAN"
@@ -109,6 +125,10 @@ function updateObjectStatusToOnLoan($idObject) {
 
 // Function to update the object status to "AVAILABLE"
 function returnObject($idObject){
+    
+    if (!is_numeric($idObject)) {
+        die("Error executing query: This is not a number ");
+    }
     $conn = connectToDatabase();
     // Get the current date
     $receptionDate = date('Y-m-d');
