@@ -2,8 +2,8 @@
 
 // Function to establish database connection
 function connectToDatabase() {
-    $servername = "localhost"; // Change this to your MySQL server hostname if necessary
-    $username = "elimeletca_admin1806"; // Change this to your MySQL username
+    $servername = "localhost:3306"; // Change this to your MySQL server hostname if necessary
+    $username = "elimeletca_admin"; // Change this to your MySQL username
     $password = "3e?r6O39u"; // Change this to your MySQL password
     $dbname = "elimeletca_dbloans"; // Change this to your MySQL database name
 
@@ -25,65 +25,36 @@ function closeDatabaseConnection($conn) {
 
 function getObjectById($objectId){
     $conn = connectToDatabase();
-    $sql = "SELECT * FROM file WHERE id_file = $objectId";
+    $sql = "SELECT * FROM object WHERE id_object = $objectId";
     $result = $conn->query($sql);
-    return $result;
-
-}
-// Function to get the loan history of a file
-function getLoanHistory($fileId) {
-    $conn = connectToDatabase();
-
-    $sql = "SELECT * FROM loan WHERE id_file = $fileId";
-    $result = $conn->query($sql);
-
-    $loanHistory = array();
-    if ($result->num_rows > 0) {
-        while($row = $result->fetch_assoc()) {
-            $loanHistory[] = $row;
-        }
+    
+    // Check if the query was successful
+    if ($result === false) {
+        die("Error executing query: " . $conn->error);
     }
-
+    
+    // Fetch the data from the result set
+    $object = $result->fetch_assoc();
+    
+    // Close the database connection
     closeDatabaseConnection($conn);
+    
+    // Return the object data
+    return $object;
 
-    return $loanHistory;
 }
 
-// Function to check the current status of the file (available or not)
-function checkFileStatus($fileId) {
-    $conn = connectToDatabase();
 
-    $sql = "SELECT file_status FROM file WHERE id_file = $fileId";
-    $result = $conn->query($sql);
-
-    $fileStatus = "";
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        $fileStatus = $row["file_status"];
-    }
-
-    closeDatabaseConnection($conn);
-
-    return $fileStatus;
-}
-
-// Route to get the loan history of a file
+// Route to get the object
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
+    $objectId = $_GET['id'];
+    
+    // Retrieve the object data
+    $object = getObjectById($objectId);
 
-    $fileId = $_GET['fileId'];
-    echo getObjectById($fileId);
-
-    /*header('Content-Type: application/json');
-    echo json_encode($loanHistory);*/
-}
-
-// Route to check the current status of the file
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id']) && isset($_GET['currentStatus'])) {
-    /*$fileId = $_GET['fileId'];
-    $fileStatus = checkFileStatus($fileId);
+    // Output the object data as JSON
     header('Content-Type: application/json');
-    echo json_encode(array('fileStatus' => $fileStatus));
-    */
+    echo json_encode($object);
 }
 
 ?>
