@@ -82,7 +82,7 @@
                     <div>
                         <label for="notes" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Note
                             about the loan</label>
-                        <textarea id="notes" rows="4"
+                        <textarea id="notes" name="notes" rows="4"
                             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="Write your notes here..."></textarea>
                     </div>
@@ -133,7 +133,7 @@
                                 </svg>
                                 <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Are you sure you
                                     want to return this file?</h3>
-                                <button data-modal-hide="popup-modal" type="button"
+                                <button id="btnreturn" name="btnreturn" data-modal-hide="popup-modal" type="button" 
                                     class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
                                     Yes, I'm sure
                                 </button>
@@ -253,78 +253,28 @@
 
                 &nbsp;
                 <!--Table-->
-                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <table id="loanTable" class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
-                            <th scope="col" class="px-6 py-3">
-                                Employee name
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Loan date
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Estimated loan days
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Reception date
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Notes
-                            </th>
+                            <th scope="col" class="px-6 py-3">Employee name</th>
+                            <th scope="col" class="px-6 py-3">Loan date</th>
+                            <th scope="col" class="px-6 py-3">Estimated loan days</th>
+                            <th scope="col" class="px-6 py-3">Reception date</th>
+                            <th scope="col" class="px-6 py-3">Notes</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr
-                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <th scope="row"
-                                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                John Doe
-                            </th>
-                            <td class="px-6 py-4">
-                                24/4/2024
-                            </td>
-                            <td class="px-6 py-4">
-                                4 Days
-                            </td>
-                            <td class="px-6 py-4">
-                                Waiting...
-                            </td>
-                            <td class="px-6 py-4">
-                                <a data-modal-target="default-modal" data-modal-toggle="default-modal"
-                                    class="font-medium text-white-900 dark:text-white-500 hover:underline">See...</a>
-                            </td>
-
-                        </tr>
-                        <tr
-                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <th scope="row"
-                                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                Marcus Doe
-                            </th>
-                            <td class="px-6 py-4">
-                                24/4/2024
-                            </td>
-                            <td class="px-6 py-4">
-                                20 Days
-                            </td>
-                            <td class="px-6 py-4">
-                                6/5/2024
-                            </td>
-                            <td class="px-6 py-4">
-                                <a data-modal-target="default-modal" data-modal-toggle="default-modal"
-                                    class="font-medium text-white-900 dark:text-white-500 hover:underline">See...</a>
-                            </td>
-                        </tr>
+                        <!-- Rows will be dynamically added here -->
                     </tbody>
                 </table>
 
-                <!-- Main modal -->
+                <!-- Main modal Case use notes with modal
                 <div id="default-modal" tabindex="-1" aria-hidden="true"
                     class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
                     <div class="relative p-4 w-full max-w-2xl max-h-full">
-                        <!-- Modal content -->
+                        Modal content
                         <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                            <!-- Modal header -->
+                            Modal header
                             <div
                                 class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
@@ -341,7 +291,7 @@
                                     <span class="sr-only">Close modal</span>
                                 </button>
                             </div>
-                            <!-- Modal body -->
+                            Modal body
                             <div class="p-4 md:p-5 space-y-4">
                                 <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
                                     With less than a month to go before the European Union enacts new consumer privacy
@@ -355,13 +305,13 @@
                                     breaches that could personally affect them.
                                 </p>
                             </div>
-                            <!-- Modal footer -->
+                            Modal footer
                             <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
                         
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>-->
 
             </div>
         </div>
