@@ -6,6 +6,7 @@
     <title>System Loans</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+	<script src="js/main.js"></script>
 
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -28,27 +29,26 @@
         <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab"
             data-tabs-toggle="#default-tab-content" role="tablist">
             <li class="me-2" role="presentation">
-                <button class="inline-block p-4 border-b-2 rounded-t-lg" id="profile-tab" data-tabs-target="#profile"
-                    type="button" role="tab" aria-controls="profile" aria-selected="false">Status</button>
+                <button class="inline-block p-4 border-b-2 rounded-t-lg" id="status-tab" data-tabs-target="#status"
+                    type="button" role="tab" aria-controls="status" aria-selected="false">Status</button>
             </li>
             <li class="me-2" role="presentation">
                 <button
                     class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-                    id="dashboard-tab" data-tabs-target="#dashboard" type="button" role="tab" aria-controls="dashboard"
+                    id="history-tab" data-tabs-target="#history" type="button" role="tab" aria-controls="history"
                     aria-selected="false">History</button>
             </li>
         </ul>
     </div>
     <div id="default-tab-content">
         <!--Status tab-->
-        <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="profile" role="tabpanel"
-            aria-labelledby="profile-tab">
+        <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="status" role="tabpanel"
+            aria-labelledby="status-tab">
             <!--Available section-->
-            <h3 class="text-3xl font-bold dark:text-white">Case available</h3>
+			<div id="caseavailable" style="display: none;">
+				<!--Available modal-->
             &nbsp;
-            <div
-                class="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-
+            <div class="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700" >
                 <div class="flex justify-end px-4 pt-4">
                 </div>
                 <div class="flex flex-col items-center pb-10">
@@ -56,22 +56,14 @@
                         src="https://cdn0.iconfinder.com/data/icons/shift-free/32/Complete_Symbol-512.png"
                         alt="Bonnie image" />
                     <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">Available</h5>
-                    <!--<span class="text-sm text-gray-500 dark:text-gray-400">Visual Designer</span>
-                    <div class="flex mt-4 md:mt-6">
-                        <a href="#"
-                            class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Create
-                            loan</a>
-                        <a href="#"
-                            class="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Test</a>
-                    </div>-->
                 </div>
             </div>
             &nbsp;
             <!--Loan section modal form-->
-            <div
-                class="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
-                <form class="space-y-6" action="#">
+            <div class="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+                <form id="loanForm" class="space-y-6" action="#">
                     <h5 class="text-xl font-medium text-gray-900 dark:text-white">Register a new loan</h5>
+					<input id="id_object" name="id_object" value="0" type="hidden">
                     <div>
                         <label for="employee_name"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Employee name</label>
@@ -80,10 +72,10 @@
                             placeholder="John Doe" required />
                     </div>
                     <div>
-                        <label for="number_days"
+                        <label for="estimated_loan_days"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Estimated days to be
                             returned</label>
-                        <input type="number" name="number_days" id="number_days" placeholder="7"
+                        <input type="number" name="estimated_loan_days" id="estimated_loan_days" placeholder="7"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                             required />
                     </div>
@@ -98,10 +90,12 @@
                         class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Save</button>
                 </form>
             </div>
+			</div>
+            
             &nbsp;
-            <h3 class="text-3xl font-bold dark:text-white">Case on loan</h3>
-            &nbsp;
-            <!--Available section test return-->
+			
+			<div id="caseonloan" style="display: none;">
+				            <!--Available section test return-->
             <div
                 class="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <div class="flex justify-end px-4 pt-4">
@@ -118,8 +112,7 @@
                     </div>
                 </div>
                 <!--Pop up section-->
-                <div id="popup-modal" tabindex="-1"
-                    class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                <div id="popup-modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
                     <div class="relative p-4 w-full max-w-md max-h-full">
                         <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                             <button type="button"
@@ -153,10 +146,16 @@
                 </div>
 
             </div>
+			</div>
+
         </div>
+		
+		
+		
+		
         <!--History tab-->
-        <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="dashboard" role="tabpanel"
-            aria-labelledby="dashboard-tab">
+        <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="history" role="tabpanel"
+            aria-labelledby="history-tab">
             <!--Table tab-->
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                 <div
@@ -233,43 +232,6 @@
                                 </li>
                             </ul>
                         </div>
-                        <!-- Dropdown action
-                        <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction"
-                            class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                            type="button">
-                            <span class="sr-only">Action button</span>
-                            Action
-                            <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                fill="none" viewBox="0 0 10 6">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                    stroke-width="2" d="m1 1 4 4 4-4" />
-                            </svg>
-                        </button>
-                        Dropdown action menu
-                        <div id="dropdownAction"
-                            class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-                            <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
-                                aria-labelledby="dropdownActionButton">
-                                <li>
-                                    <a href="#"
-                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Reward</a>
-                                </li>
-                                <li>
-                                    <a href="#"
-                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Promote</a>
-                                </li>
-                                <li>
-                                    <a href="#"
-                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Activate
-                                        account</a>
-                                </li>
-                            </ul>
-                            <div class="py-1">
-                                <a href="#"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete
-                                    User</a>
-                            </div>
-                        </div>-->
                     </div>
                     <label for="table-search" class="sr-only">Search</label>
                     <div class="relative">
@@ -289,7 +251,7 @@
                     </div>
                 </div>
 
-                &nbsp
+                &nbsp;
                 <!--Table-->
                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
