@@ -112,6 +112,9 @@ function updateObjectStatusToOnLoan($idObject) {
     if (!is_numeric($idObject)) {
         die("Error executing query: This is not a number ");
     }
+    /*if (!preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $idObject)) {
+        die("Error executing query: This is not a valid UUID");
+    }*/
 
     $conn = connectToDatabase();
 
