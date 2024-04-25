@@ -54,7 +54,7 @@ function addNewLoan($idObject, $employeeName, $estimatedLoanDays, $notes) {
     // Insert the new loan into the database
     $sql = "INSERT INTO loan (id_object, employee_name, loan_date, estimated_loan_days, notes) VALUES ('$idObject', '$employeeName', '$loanDate', '$estimatedLoanDays', '$notes')";
 	
-    $result = $conn->query($sql);
+    /*$result = $conn->query($sql);
     
     // Check if the query was successful
     if ($result === false) {
@@ -66,7 +66,7 @@ function addNewLoan($idObject, $employeeName, $estimatedLoanDays, $notes) {
     
     // Close the database connection
     closeDatabaseConnection($conn);
-    
+    */
     // Return the object data
     return $sql;
 }
