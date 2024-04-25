@@ -100,49 +100,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $estimatedLoanDays = $_POST['estimated_loan_days'];
     $notes = $_POST['notes'];
 	
-	$object = addNewLoan($idObject, $employeeName, $estimatedLoanDays, $notes);
+	//$object = addNewLoan($idObject, $employeeName, $estimatedLoanDays, $notes);
+    //$object = $idObject." " .$employeeName. " ".$estimatedLoanDays." ". $notes;
+    var_dump($_POST);
     // Output the object data as JSON
     header('Content-Type: application/json');
     echo json_encode($object);
 }
-/*// Route to add new loan:
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Retrieve the loan data from the request
-    $idObject = $_POST['id_object'];
-    $employeeName = $_POST['employee_name'];
-    $estimatedLoanDays = $_POST['estimated_loan_days'];
-    $notes = $_POST['notes'];
-
-try {
-    // Add the new loan to the database
-    if (addNewLoan($idObject, $employeeName, $estimatedLoanDays, $notes)) {
-        // If the loan was added successfully, update the object status to "ONLOAN"
-        updateObjectStatusToOnLoan($idObject);
-        echo json_encode(array('success' => true));
-    } else {
-        echo json_encode(array('success' => false));
-    }
-} catch (Exception $e) {
-    // Catch any exceptions thrown by addNewLoan function
-    echo json_encode(array('success' => false, 'error' => $e->getMessage()));
-}
-}*/
-/*if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    // El cliente está realizando una solicitud GET
-    echo "GET request";
-} elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // El cliente está realizando una solicitud POST
-    echo "POST request";
-} elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
-    // El cliente está realizando una solicitud PUT
-    echo "PUT request";
-} elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-    // El cliente está realizando una solicitud DELETE
-    echo "DELETE request";
-} else {
-    // Método de solicitud no reconocido
-    echo "Unknown request method";
-}*/
 
 
 ?>
