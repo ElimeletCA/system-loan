@@ -102,10 +102,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	
 	//$object = addNewLoan($idObject, $employeeName, $estimatedLoanDays, $notes);
     //$object = $idObject." " .$employeeName. " ".$estimatedLoanDays." ". $notes;
-    var_dump($_POST);
+    $object = var_dump($_POST);
     // Output the object data as JSON
     header('Content-Type: application/json');
-    echo json_encode($object);
+    echo json_encode($object . htmlspecialchars($_POST['id_object']));
 }
 
 
