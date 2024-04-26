@@ -1,4 +1,26 @@
 <?php
+/*
+CREATE DATABASE dbloans;
+USE dbloans;
+
+CREATE TABLE object (
+    uuid_object CHAR(36) PRIMARY KEY,
+    name VARCHAR(255),
+    description TEXT,
+    object_status VARCHAR(50)
+);
+
+CREATE TABLE loan (
+    id_loan INT AUTO_INCREMENT PRIMARY KEY,
+    uuid_object CHAR(36),
+    employee_name VARCHAR(255),
+    loan_date DATE,
+    estimated_loan_days INT,
+    reception_date DATE,
+    notes TEXT,
+    FOREIGN KEY (uuid_object) REFERENCES object(uuid_object)
+);*/
+
 
 // Function to establish database connection
 function connectToDatabase() {
@@ -24,17 +46,27 @@ function closeDatabaseConnection($conn) {
 }
 
 function getObjectById($idObject) {
-    if (!is_numeric($idObject)) {
-        die("Error executing query: This is not a number ");
+    if (!preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $idObject)) {
+        die("Error executing query: This is not a valid UUID");
     }
     $conn = connectToDatabase();
+
+    $exists = checkUUIDExists($conn, $idObject);
+    
+    if (!$exists) {
+        $sql_insert = "INSERT INTO object (uuid_object, object_status) VALUES ('$idObject', 'AVAILABLE')";
+        if (!$conn->query($sql_insert)) {
+            die("Error executing query: " . $conn->error);
+        }
+    }
 
     // Query to select object and its related loans
     $sql = "SELECT o.*, l.* 
             FROM object AS o 
             LEFT JOIN loan AS l 
-            ON o.id_object = l.id_object 
-            WHERE o.id_object = $idObject";
+            ON o.uuid_object = l.uuid_object 
+            WHERE o.uuid_object = '$idObject'";
+    
     $result = $conn->query($sql);
 
     // Check if the query was successful
@@ -72,7 +104,15 @@ function getObjectById($idObject) {
     return $objectData;
 }
 
-
+function checkUUIDExists($conn, $idObject) {
+    $sql = "SELECT COUNT(*) AS count FROM object WHERE uuid_object = '$idObject'";
+    $result = $conn->query($sql);
+    if ($result === false) {
+        die("Error executing query: " . $conn->error);
+    }
+    $row = $result->fetch_assoc();
+    return $row['count'] > 0;
+}
 // Function to add a new loan to the database
 function addNewLoan($idObject, $employeeName, $estimatedLoanDays, $notes) {
     $conn = connectToDatabase();
@@ -81,11 +121,11 @@ function addNewLoan($idObject, $employeeName, $estimatedLoanDays, $notes) {
     $loanDate = date('Y-m-d');
     
     // Prepare the SQL statement
-    $sql = "INSERT INTO loan (id_object, employee_name, loan_date, estimated_loan_days, notes) VALUES (?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO loan (uuid_object, employee_name, loan_date, estimated_loan_days, notes) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     
     // Bind parameters
-    $stmt->bind_param("issss", $idObject, $employeeName, $loanDate, $estimatedLoanDays, $notes);
+    $stmt->bind_param("sssss", $idObject, $employeeName, $loanDate, $estimatedLoanDays, $notes);
     
     // Execute the statement
     $stmt->execute();
@@ -107,19 +147,15 @@ function addNewLoan($idObject, $employeeName, $estimatedLoanDays, $notes) {
 
 // Function to update the object status to "ONLOAN"
 function updateObjectStatusToOnLoan($idObject) {
-
     
-    if (!is_numeric($idObject)) {
-        die("Error executing query: This is not a number ");
-    }
-    /*if (!preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $idObject)) {
+    if (!preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $idObject)) {
         die("Error executing query: This is not a valid UUID");
-    }*/
+    }
 
     $conn = connectToDatabase();
 
     // Update the object status to "ONLOAN"
-    $sql = "UPDATE object SET object_status = 'ONLOAN' WHERE id_object = '$idObject'";
+    $sql = "UPDATE object SET object_status = 'ONLOAN' WHERE uuid_object = '$idObject'";
     $conn->query($sql);
 
     // Close the database connection
@@ -129,8 +165,8 @@ function updateObjectStatusToOnLoan($idObject) {
 // Function to update the object status to "AVAILABLE"
 function returnObject($idObject){
     
-    if (!is_numeric($idObject)) {
-        die("Error executing query: This is not a number ");
+    if (!preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $idObject)) {
+        die("Error executing query: This is not a valid UUID");
     }
     $conn = connectToDatabase();
     // Get the current date
@@ -139,9 +175,9 @@ function returnObject($idObject){
     // Update loan reception date to
     $sql = "UPDATE loan AS l
             INNER JOIN object AS o 
-            ON l.id_object = o.id_object
+            ON l.uuid_object = o.uuid_object
             SET l.reception_date = '$receptionDate', o.object_status = 'AVAILABLE'
-            WHERE l.reception_date IS NULL AND l.id_object = '$idObject'";
+            WHERE l.reception_date IS NULL AND l.uuid_object = '$idObject'";
 
     $result = $conn->query($sql);
     // Check if the query was successful

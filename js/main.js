@@ -3,13 +3,12 @@ document.addEventListener('DOMContentLoaded', function() {
     function getUrlParameter(name) {
         name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
         var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-        var results = regex.exec(location.search);
+        var results = regex.exec(window.location.href);
         return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-    };
+    }; 
 
     // Get the ID from the URL
     const objectId = getUrlParameter('id');
-    
     // Make a GET request to your API
     fetch('http://localhost/system-loan/object_management?id=' + objectId)
         .then(response => response.json())
@@ -51,6 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Collect form data
         //const formData = new FormData(this);
         var formData = new FormData(this);
+
         // Make a POST request to the API
         fetch('http://localhost/system-loan/object_management.php', {
             method: 'POST',
@@ -59,9 +59,10 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 // Reload the page after successful response
+                console.log(data);
                 window.location.reload();
             })
-        .catch(error => console.error('Error:', error));
+        //.catch(error => console.error('Error:', error));
     });
     document.getElementById('btnreturn').addEventListener('click', function (event) {
         event.preventDefault(); // Prevent the form from submitting normally
